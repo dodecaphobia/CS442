@@ -10,7 +10,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>
     </RootNamespace>
-    <ProjectGuid>{86A14D9A-D547-3103-3704-7E32E3D7FD66}</ProjectGuid>
+    <ProjectGuid>{7D6D1F31-B822-F408-1E3E-27CC8B4BDB1D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -61,27 +61,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AIAgentGenerator.cs" />
-    <Compile Include="Assets\AIcontroller.cs" />
-    <Compile Include="Assets\Edge.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshLink.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshModifier.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshModifierVolume.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshSurface.cs" />
-    <Compile Include="Assets\Node.cs" />
-    <Compile Include="Assets\NodeColorChanger.cs" />
-    <Compile Include="Assets\tempAgentGenerator.cs" />
+    <Compile Include="Assets\Scripts\AIAgentGenerator.cs" />
+    <Compile Include="Assets\Scripts\AIcontroller.cs" />
+    <Compile Include="Assets\Scripts\Edge.cs" />
+    <Compile Include="Assets\Scripts\Node.cs" />
+    <Compile Include="Assets\Scripts\NodeColorChanger.cs" />
+    <None Include="Assets\MapData\demoMapEdge.txt" />
+    <None Include="Assets\MapData\demoMapNodes.txt" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/prototype01/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/442proj/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/prototype01/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/442proj/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/prototype01/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/442proj/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/prototype01/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/442proj/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
