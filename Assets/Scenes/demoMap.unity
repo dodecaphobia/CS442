@@ -1469,7 +1469,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1667290603}
   - component: {fileID: 1667290602}
-  - component: {fileID: 1667290604}
   m_Layer: 0
   m_Name: Agents
   m_TagString: Untagged
@@ -1488,8 +1487,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf4ccf32455fbbc42961e950cbc95db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setSocial: 100
+  setSocial: 30
   setInitialKnowledge: 50
+  setDelayTime: 1000
+  initializeDistance: 0
+  minDistFile: 
   dataFile: foo.txt
   displacement: 1
   nodeFile: demoMapNodes.txt
@@ -1510,17 +1512,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1667290604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1667290601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6cab2a5010338142930fa8a5dba2fb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1812296316
 GameObject:
   m_ObjectHideFlags: 0
