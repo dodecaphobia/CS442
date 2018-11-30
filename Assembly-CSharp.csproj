@@ -65,12 +65,14 @@
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshModifier.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshModifierVolume.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshSurface.cs" />
-    <Compile Include="Assets\Scripts\AIAgentGenerator.cs" />
+    <Compile Include="Assets\Scripts\AgentManager.cs" />
     <Compile Include="Assets\Scripts\AIcontroller.cs" />
+    <Compile Include="Assets\Scripts\DataCollect.cs" />
     <Compile Include="Assets\Scripts\Edge.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
     <Compile Include="Assets\Scripts\NodeColorChanger.cs" />
     <None Include="Assets\MapData\demoMapEdge.txt" />
+    <None Include="Assets\AgentData\foo.txt" />
     <None Include="Assets\MapData\demoMapNodes.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Cedric/Documents/Workplace/Unity/442proj/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
