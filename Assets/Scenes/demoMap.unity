@@ -1487,8 +1487,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf4ccf32455fbbc42961e950cbc95db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setSocial: 100
+  setSocial: 30
   setInitialKnowledge: 50
+  setDelayTime: 1000
+  initializeDistance: 0
+  minDistFile: 
+  dataFile: foo.txt
   displacement: 1
   nodeFile: demoMapNodes.txt
   edgeFile: demoMapEdge.txt
