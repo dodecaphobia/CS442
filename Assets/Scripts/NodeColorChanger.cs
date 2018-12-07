@@ -9,6 +9,7 @@ public class NodeColorChanger : MonoBehaviour {
     // public GameObject sphereNode;
     private List<AIcontroller> foundAgents;
     private Node loc = null;
+    // private static int maxAgentsWhoKnow = 0;
 
     public void setNode(Node n)
     {
@@ -34,13 +35,31 @@ public class NodeColorChanger : MonoBehaviour {
                 }
             }
 
+            /*if(agentsWhoKnow < maxAgentsWhoKnow)
+            {
+                agentsWhoKnow = maxAgentsWhoKnow;
+            }
+            else
+            {
+                maxAgentsWhoKnow = agentsWhoKnow;
+            }*/
+
 
             if (foundAgents.Count != 0)
             {
-                float percentGradient = (float)agentsWhoKnow / foundAgents.Count;
-                //Debug.Log("Percent gradient for node " + loc.id + ": " + percentGradient);
+                // float percentGradient = (float)agentsWhoKnow / foundAgents.Count;
+                float percentGradient = (float)agentsWhoKnow / 160.0f;
+                Debug.Log("Percent gradient for node " + loc.id + ": " + percentGradient);
                 MeshRenderer nodeRenderer = (MeshRenderer)gameObject.GetComponent("MeshRenderer");
-                nodeRenderer.material.color = Color.Lerp(Color.red, Color.blue, percentGradient);
+
+                if(percentGradient < 0.5f)
+                {
+                    nodeRenderer.material.color = Color.Lerp(Color.blue, Color.yellow, percentGradient * 2.0f);
+                }
+                else
+                {
+                    nodeRenderer.material.color = Color.Lerp(Color.yellow, Color.red, (percentGradient - 0.5f) * 2);
+                }
             }
         }
         // nodeRenderer.material.color = Color.Lerp(Color.red, Color.blue, percentGradient);

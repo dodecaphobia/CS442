@@ -134,7 +134,6 @@ public class AgentManager : MonoBehaviour
             {
                 GameObject temp = Instantiate(agent, new Vector3(n.x, 1, n.y), Quaternion.identity);
                 AIcontroller ai = temp.GetComponent<AIcontroller>();
-
                 ai.setInternalVars(setSocial, this, setDelayTime, false);
                 List<Edge> e = getEdges();
                 ai.SetGraph(n, nodes, e, exits);

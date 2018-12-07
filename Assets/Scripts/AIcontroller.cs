@@ -15,12 +15,13 @@ public class AIcontroller : MonoBehaviour
     public List<int> exits;
 
     //internal vars
-    private Stopwatch timeSinceLast;
+    private List<Edge> traversed;
+
+    private bool canCommunicate;
     private int start;
     private bool isInit;
     private AgentManager mngr;
     private int social = 0;
-    private bool canMove;
     private float delayTime;
 
     private float distanceTraveled = 0;
@@ -35,11 +36,10 @@ public class AIcontroller : MonoBehaviour
 
     void Start()
     {
-        timeSinceLast = new Stopwatch();
-        timeSinceLast.Start();
+        gameObject.GetComponent<Renderer>().material.color = Color.green;
+        traversed = new List<Edge>();
+
         lastPosition = transform.position;
-        canMove = true;
-        delayTime = 0;
 
         extraExits = new List<int>();
         searched = new List<int>();
@@ -47,51 +47,55 @@ public class AIcontroller : MonoBehaviour
         visitedList = new List<int>();
     }
 
-    void Update()
-    {
+    void Update() {
+        //keep track of distance traveled
         distanceTraveled += Vector3.Distance(transform.position, lastPosition);
         lastPosition = transform.position;
+        //check if agent has reached destination
         bool reachedDest = hasReachedDest();
-        if (!canMove) {
-            agent.isStopped = true;
-            UnityEngine.Debug.Log("Currently cannot move!");
-        }
-        else if (reachedDest)
-        {
-            agent.isStopped = false;
-            if (exits.Contains((int)dest[0]))
-            {
-                mngr.storeData(isInit, start, distanceTraveled);
-                Destroy(gameObject);
-                return;
-            }
-            //update visited list
-            if (!visitedList.Contains((int)dest[0]))
-                visitNode((int)dest[0]);
-            //search if necessary
-            if (dest.Count == 1)
-                dest = repeatedA((int)dest[0]);
-            dest.RemoveAt(0);
-            //get destination node
-            if (dest.Count > 0)
-            {
-                Node n = getNode((int)dest[0]);
-                Vector3 v = new Vector3(n.x, 0, n.y);
-                agent.SetDestination(v);
+        //check if agent is able to move/not currently communicating
+        if (agent.isStopped)
+            agent.velocity = Vector3.zero;
+        else {
+            //if agent has reached destination, go to next location
+            if (reachedDest) {
+                //agent has reached exit
+                if (exits.Contains((int)dest[0])) {
+                    mngr.storeData(isInit, start, distanceTraveled);
+                    Destroy(gameObject);
+                    return;
+                }
+                //update visited list
+                if (!visitedList.Contains((int)dest[0]))
+                    visitNode((int)dest[0]);
+                //get edge data for primacy/recency, pt. 1
+                int a = (int)dest[0];
+                //search if necessary
+                if (dest.Count == 1)
+                    dest = repeatedA((int)dest[0]);
+                dest.RemoveAt(0);
+                //get edge data for primacy/recency, pt. 2
+                int b = (int)dest[0];
+                traversed.Add(getEdge(a,b));
+                //get destination node
+                if (dest.Count > 0) {
+                    Node n = getNode((int)dest[0]);
+                    Vector3 v = new Vector3(n.x, 0, n.y);
+                    agent.SetDestination(v);
+                }
             }
         }
     }
 
-    public void setInternalVars(int s, AgentManager m, float f, bool b)
-    {
+    public void setInternalVars(int s, AgentManager m, float f, bool b) {
+        canCommunicate = true;
         mngr = m;
         social = s;
         delayTime = f;
         isInit = b;
     }
 
-    public void SetGraph(Node s, List<Node> n, List<Edge> ed, List<int> ex)
-    {
+    public void SetGraph(Node s, List<Node> n, List<Edge> ed, List<int> ex) {
         dest = new List<double>();
         start = s.id;
         dest.Add(start);
@@ -100,35 +104,28 @@ public class AIcontroller : MonoBehaviour
         exits = ex;
     }
 
-    public List<Edge> getEdges()
-    {
+    public List<Edge> getEdges() {
         return this.edges;
     }
 
-    private void addEdges(List<Edge> newEdges)
-    {
-        foreach (Edge e in newEdges)
-        {
+    private void addEdges(List<Edge> newEdges) {
+        foreach (Edge e in newEdges) {
             if (!edges.Contains(e))
                 edges.Add(e);
         }
     }
 
-    private void visitNode(int n)
-    {
+    private void visitNode(int n) {
         visitedList.Add((int)dest[0]);
         Node temp = getNode(n);
-        foreach (Edge e in temp.edges)
-        {
+        foreach (Edge e in temp.edges) {
             if (!edges.Contains(e))
                 edges.Add(e);
         }
     }
 
-    public Node getNode(int id)
-    {
-        foreach (Node n in nodes)
-        {
+    public Node getNode(int id) {
+        foreach (Node n in nodes) {
             if (n.id == id)
                 return n;
         }
@@ -136,41 +133,32 @@ public class AIcontroller : MonoBehaviour
         return null;
     }
 
-    public Edge getEdge(int a, int b)
-    {
-        foreach (Edge e in edges)
-        {
+    public Edge getEdge(int a, int b) {
+        foreach (Edge e in edges) {
             if ((e.n1 == a && e.n2 == b) || (e.n1 == b && e.n2 == a))
                 return e;
         }
         return null;
     }
 
-    private bool hasReachedDest()
-    {
-        if (dest.Count == 0)
-        {
+    private bool hasReachedDest() {
+        if (dest.Count == 0) {
             return false;
         }
         Node n = getNode((int)(dest[0]));
         if (Math.Abs((int)transform.position.x - n.x) < 5 && Math.Abs((int)transform.position.z - n.y) < 5)
-        {
             return true;
-        }
         return false;
     }
 
-    private double heuristic(int cur, List<int> le, bool thisNode)
-    {
+    private double heuristic(int cur, List<int> le, bool thisNode) {
         double val = 100000;
-        foreach (int n in le)
-        {
+        foreach (int n in le) {
             if (val > getDistance(cur, n))
                 val = getDistance(cur, n);
         }
         if (thisNode)
-            foreach (int n in extraExits)
-            {
+            foreach (int n in extraExits) {
                 if (val > getDistance(cur, n))
                     val = getDistance(cur, n);
             }
@@ -274,7 +262,7 @@ public class AIcontroller : MonoBehaviour
                     edgePath.Add(getEdge(a, b));
                     a = b;
                 }
-                return edgePath;
+                return rememberEdge(edgePath);
             }
             return new List<Edge>();
         }
@@ -316,18 +304,17 @@ public class AIcontroller : MonoBehaviour
         return l.GetRange(1, l.Count - 1);
     }
 
-    private void OnTriggerEnter(Collider collision)
-    {
+    private void OnTriggerEnter(Collider collision) {
         AIcontroller other = (AIcontroller)collision.gameObject.GetComponent("AIcontroller");
-        if (!(other == null) && timeSinceLast.ElapsedMilliseconds > 100000)
-        {
+        if (!(other == null) && canCommunicate) {
             System.Random rnd = new System.Random();
             //Agent communicating
-            if (rnd.Next(0, 100) < social)
-            {
-                timeSinceLast.Reset();
-                canMove = false;
-                UnityEngine.Debug.Log("Communicating");
+            if (rnd.Next(0, 100) < social) {
+                agent.isStopped = true;
+                agent.velocity = Vector3.zero;
+                gameObject.GetComponent<Renderer>().material.color = Color.red;
+                canCommunicate = false;
+                //UnityEngine.Debug.Log("Communicating.");
                 List<Edge> pathEdges = query((int)dest[0], other.exits);
                 if (pathEdges != null)
                     addEdges(pathEdges);
@@ -337,11 +324,50 @@ public class AIcontroller : MonoBehaviour
         }
     }
 
-    IEnumerator communicationDelay()
-    {    
+    //delayed movement for communication
+    IEnumerator communicationDelay() {    
         yield return new WaitForSeconds(delayTime);
-        canMove = true;
-        UnityEngine.Debug.Log("Done communicating");
-        timeSinceLast.Start();
+        agent.isStopped = false;
+        //UnityEngine.Debug.Log("Done communicating");
+        gameObject.GetComponent<Renderer>().material.color = Color.green;
+        StartCoroutine(waitBetweenCommunication());
+    }
+
+    IEnumerator waitBetweenCommunication() {
+        yield return new WaitForSeconds(10);
+        canCommunicate = true;
+    }
+
+    private List<Edge> rememberEdge(List<Edge> edgesToPass) {
+        List<Edge> rememberedEdges = new List<Edge>();
+        foreach (Edge e in edgesToPass) {
+            System.Random rnd = new System.Random();
+            //if edge has been visited
+            if(traversed.Contains(e)) {
+                UnityEngine.Debug.Log("An edge we know");
+                double d = 0;
+                for(int i = 0; i < traversed.Count; i++)
+                    if(traversed[i] == e)
+                        d = (i + 0.5) / traversed.Count;
+                if(rnd.NextDouble() < getPrimacyRecency(d))
+                    rememberedEdges.Add(e);
+            }
+            //else (edge has not been visited)
+            else {
+                if(rnd.NextDouble() < 0.5)
+                    rememberedEdges.Add(e);
+            }
+        }
+        if(rememberedEdges.Count < edgesToPass.Count)
+            UnityEngine.Debug.Log("primacy and recency works");
+        return rememberedEdges;
+    }
+
+    private double getPrimacyRecency(double x) {
+        double y = ((1 / Math.Sqrt(2 * Math.PI)) * Math.Pow(Math.E, -0.5 * Math.Pow((x - 0.5), 2)));
+        y *= -0.5;
+        y += 1;
+        UnityEngine.Debug.Log("value: " + y);
+        return y;
     }
 }
