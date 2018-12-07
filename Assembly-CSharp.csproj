@@ -72,7 +72,8 @@
     <Compile Include="Assets\Scripts\Node.cs" />
     <Compile Include="Assets\Scripts\NodeColorChanger.cs" />
     <None Include="Assets\MapData\demoMapEdge.txt" />
-    <None Include="Assets\AgentData\foo.txt" />
+    <None Include="Assets\AgentData\minDist.txt" />
+    <None Include="Assets\AgentData\empDist.txt" />
     <None Include="Assets\MapData\demoMapNodes.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/dodec/Workplace/Unity/442proj/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

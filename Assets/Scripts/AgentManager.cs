@@ -25,9 +25,9 @@ public class AgentManager : MonoBehaviour
     private List<Node> nodes;
     private List<Edge> edges;
     private List<int> exits;
+    private List<float> minDists;
 
-    void Start()
-    {
+    void Start() {
         string path = "Assets\\AgentData\\" + dataFile;
         if (!File.Exists(path))
             File.Delete(path);
@@ -42,19 +42,20 @@ public class AgentManager : MonoBehaviour
         nodes = new List<Node>();
         edges = new List<Edge>();
         exits = new List<int>();
-        while ((line = reader.ReadLine()) != null)
-        {
+        List<Node> tempExits = new List<Node>();
+        while ((line = reader.ReadLine()) != null) {
             string[] items = line.Split(',');
             nodes.Add(new Node(float.Parse(items[0]), float.Parse(items[1])));
-            if (int.Parse(items[2]) == 1)
+            if (int.Parse(items[2]) == 1) {
+                tempExits.Add(nodes[nodes.Count - 1]);
                 exits.Add(((Node)(nodes[nodes.Count - 1])).id);
+            }
             else if (int.Parse(items[2]) == 2)
                 spawn.Add(nodes[nodes.Count - 1]);
         }
 
         //create node game objects
-        foreach (Node n in nodes)
-        {
+        foreach (Node n in nodes) {
             GameObject temp = Instantiate(nodeObject, new Vector3(n.x, 5, n.y), Quaternion.identity);
             NodeColorChanger nodeColor = (NodeColorChanger)temp.GetComponent("NodeColorChanger");
             nodeColor.setNode(n);
@@ -74,21 +75,41 @@ public class AgentManager : MonoBehaviour
             n2.edges.Add(e);
         }
 
+        minDists = new List<float>();
         if (initializeDistance) {
             path = "Assets\\AgentData\\" + minDistFile;
             if (!File.Exists(path))
                 File.Delete(path);
             dataReader = File.CreateText(path);
             dataReader.Close();
-            foreach (Node n in spawn)
-            {
-                GameObject temp = Instantiate(agent, new Vector3(n.x, 1, n.y), Quaternion.identity);
-                AIcontroller ai = temp.GetComponent<AIcontroller>();
-
-                ai.setInternalVars(setSocial, this, setDelayTime, true);
-                List<Edge> e = getEdges();
-                ai.SetGraph(n, nodes, e, exits);
+            foreach (Node n in spawn) {
+                Vector3 v1 = new Vector3(n.x, 1, n.y);
+                float remainingDistance = 10000000f;
+                foreach(Node e in tempExits) {
+                    Vector3 v2 = new Vector3(e.x, 0, e.y);
+                    UnityEngine.AI.NavMeshPath navPath = new UnityEngine.AI.NavMeshPath();
+                    UnityEngine.AI.NavMesh.CalculatePath(v1,v2,UnityEngine.AI.NavMesh.AllAreas,navPath);
+                    float tempDist = 0f;
+                    for(int i = 1; i < navPath.corners.Length; i++) {
+                        v2 = navPath.corners[i];
+                        tempDist += Vector3.Distance(v1, v2);
+                        v1 = v2;
+                    }
+                    if(tempDist < remainingDistance)
+                        remainingDistance = tempDist;
+                }
+                minDists.Add(remainingDistance);
+                storeData(true, n.id, remainingDistance);
             }
+        }
+        else {
+            path = "Assets\\AgentData\\" + minDistFile;
+            reader = File.OpenText(path);
+            while ((line = reader.ReadLine()) != null) {
+                string[] items = line.Split(',');
+                minDists.Add(float.Parse(items[1]));
+            }
+
         }
 
         //generate agents using AIcontroller which have limited knowledge of the graph
@@ -121,9 +142,17 @@ public class AgentManager : MonoBehaviour
         string path;
         if (isInit)
             path = "Assets\\AgentData\\" + minDistFile;
-        else
+        else {
             path = "Assets\\AgentData\\" + dataFile;
-        File.AppendAllText(path, (f + "\n"));
+            float denom = -1;
+            for(int i = 0; i < spawn.Count; i++) {
+                Node n = spawn[i];
+                if(start == n.id)
+                    denom = minDists[i];
+            }
+            f /= denom;
+        }
+        File.AppendAllText(path, (start + "," + f + "\n"));
     }
 
     IEnumerator generateAgent()
