@@ -49,7 +49,7 @@ public class NodeColorChanger : MonoBehaviour {
             {
                 // float percentGradient = (float)agentsWhoKnow / foundAgents.Count;
                 float percentGradient = (float)agentsWhoKnow / 160.0f;
-                Debug.Log("Percent gradient for node " + loc.id + ": " + percentGradient);
+                //Debug.Log("Percent gradient for node " + loc.id + ": " + percentGradient);
                 MeshRenderer nodeRenderer = (MeshRenderer)gameObject.GetComponent("MeshRenderer");
 
                 if(percentGradient < 0.5f)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -152,7 +153,7 @@ public class AgentManager : MonoBehaviour
             }
             f /= denom;
         }
-        File.AppendAllText(path, (start + "," + f + "\n"));
+        File.AppendAllText(path, (start + "," + f + Environment.NewLine));
     }
 
     IEnumerator generateAgent()
@@ -161,6 +162,7 @@ public class AgentManager : MonoBehaviour
         {
             foreach (Node n in spawn)
             {
+                Debug.Log("Generating agent " + i + " at node " + n.id);
                 GameObject temp = Instantiate(agent, new Vector3(n.x, 1, n.y), Quaternion.identity);
                 AIcontroller ai = temp.GetComponent<AIcontroller>();
                 ai.setInternalVars(setSocial, this, setDelayTime, false);

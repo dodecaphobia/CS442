@@ -1487,16 +1487,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf4ccf32455fbbc42961e950cbc95db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setSocial: 30
+  setSocial: 75
   setInitialKnowledge: 50
   setDelayTime: 2
   initializeDistance: 1
   minDistFile: minDist.txt
-  dataFile: empDist.txt
+  dataFile: empDist075.txt
   displacement: 1
   nodeFile: demoMapNodes.txt
   edgeFile: demoMapEdge.txt
-  numAgents: 200
+  numAgents: 20
   agent: {fileID: 1676364918050846, guid: e00a9a92c87a1eb458edae50ddd64d55, type: 2}
   nodeObject: {fileID: 1789786596842300, guid: ede2429f30b5ea248807e4532125d62d, type: 2}
 --- !u!4 &1667290603

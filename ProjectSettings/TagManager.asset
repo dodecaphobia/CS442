@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - OfficeCubicle
   layers:
   - Default
   - TransparentFX
@@ -13,13 +14,13 @@ TagManager:
   - UI
   - 
   - 
-  - PostProcessing
-  - Player
-  - Q1
-  - Q2
-  - Q3
-  - Q4
-  - Nodes
+  - oldNodes
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
