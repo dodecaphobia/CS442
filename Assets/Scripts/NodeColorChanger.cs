@@ -7,23 +7,24 @@ public class NodeColorChanger : MonoBehaviour {
     public Color lerpedColor2 = Color.green;
     
     // public GameObject sphereNode;
-    private List<AIcontroller> foundAgents;
+    private List<AIData> foundAgents;
     private Node loc = null;
     // private static int maxAgentsWhoKnow = 0;
 
     public void setNode(Node n)
     {
+        Debug.Log("" + n.id);
         loc = n;
     }
 
 	// Update is called once per frame
 	void Update () {
-        if (loc != null)
-        {
-            foundAgents = new List<AIcontroller>(FindObjectsOfType<AIcontroller>());
+        if (loc != null) {
+            Debug.Log("works?");
+            foundAgents = new List<AIData>(FindObjectsOfType<AIData>());
             int agentsWhoKnow = 0;
 
-            foreach (AIcontroller agent in foundAgents)
+            foreach (AIData agent in foundAgents)
             {
                 foreach (Edge edge in agent.getEdges())
                 {

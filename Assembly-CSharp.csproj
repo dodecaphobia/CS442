@@ -10,7 +10,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>
     </RootNamespace>
-    <ProjectGuid>{BF62E258-888C-48FA-6048-36AC3F715FC1}</ProjectGuid>
+    <ProjectGuid>{B01D93A0-1080-F286-ED9D-BAA27496E40A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -67,11 +67,13 @@
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshSurface.cs" />
     <Compile Include="Assets\Scripts\AgentManager.cs" />
     <Compile Include="Assets\Scripts\AIcontroller.cs" />
+    <Compile Include="Assets\Scripts\AIData.cs" />
     <Compile Include="Assets\Scripts\DataCollect.cs" />
     <Compile Include="Assets\Scripts\Edge.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
     <Compile Include="Assets\Scripts\NodeColorChanger.cs" />
-    <None Include="Assets\MapData\demoMapEdge.txt" />
+    <Compile Include="Assets\Scripts\NodeManager.cs" />
+    <None Include="Assets\MapData\edge.txt" />
     <None Include="Assets\AgentData\minDist.txt" />
     <None Include="Assets\AgentData\empDist050.txt" />
     <None Include="Assets\AgentData\empDist000.txt" />
@@ -81,19 +83,19 @@
     <None Include="Assets\AgentData\empDist100.txt" />
     <None Include="Assets\AgentData\data.txt" />
     <None Include="Assets\AgentData\empDist025.txt" />
-    <None Include="Assets\MapData\demoMapNodes.txt" />
+    <None Include="Assets\MapData\nodes.txt" />
     <None Include="Assets\AgentData\empDist060.txt" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/dodec/Workplace/Unity/Jaman/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/dodec/Workplace/Unity/442ProjMain/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/dodec/Workplace/Unity/Jaman/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/dodec/Workplace/Unity/442ProjMain/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/dodec/Workplace/Unity/Jaman/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/dodec/Workplace/Unity/442ProjMain/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/dodec/Workplace/Unity/Jaman/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/dodec/Workplace/Unity/442ProjMain/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.18f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -276,7 +278,7 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.18f1/Editor/Data/Managed/Unity.Locator.dll</HintPath>
     </Reference>
     <Reference Include="Facebook.Unity.Settings">
-      <HintPath>C:/Users/dodec/Workplace/Unity/Jaman/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
+      <HintPath>C:/Users/dodec/Workplace/Unity/442ProjMain/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.18f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
@@ -332,7 +334,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{F2C16E90-11AE-C7E1-6B66-5E8428D67197}</Project>
+      <Project>{CFEB76D3-0009-B1E5-E9F3-0C40732C3978}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
   </ItemGroup>
