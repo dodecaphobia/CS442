@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class AgentManager : MonoBehaviour
 {
-    public NodeManager nm;
 
     public int setSocial = 50;
     public int setInitialKnowledge = 50;
@@ -30,7 +28,6 @@ public class AgentManager : MonoBehaviour
     private List<float> minDists;
 
     void Start() {
-
         string path = "Assets\\AgentData\\" + dataFile;
         if (!File.Exists(path))
             File.Delete(path);
@@ -48,8 +45,7 @@ public class AgentManager : MonoBehaviour
         List<Node> tempExits = new List<Node>();
         while ((line = reader.ReadLine()) != null) {
             string[] items = line.Split(',');
-            GameObject temp = Instantiate(nodeObject, new Vector3(int.Parse(items[0]), 0, int.Parse(items[1])), Quaternion.identity);
-            nodes.Add(temp.GetComponent<Node>());
+            nodes.Add(new Node(float.Parse(items[0]), float.Parse(items[1])));
             if (int.Parse(items[2]) == 1) {
                 tempExits.Add(nodes[nodes.Count - 1]);
                 exits.Add(((Node)(nodes[nodes.Count - 1])).id);
@@ -58,10 +54,66 @@ public class AgentManager : MonoBehaviour
                 spawn.Add(nodes[nodes.Count - 1]);
         }
 
-        nm.done(nodes);
+        //create node game objects
+        foreach (Node n in nodes) {
+            GameObject temp = Instantiate(nodeObject, new Vector3(n.x, 5, n.y), Quaternion.identity);
+            NodeColorChanger nodeColor = (NodeColorChanger)temp.GetComponent("NodeColorChanger");
+            nodeColor.setNode(n);
+        }
+
+        //determine edges
+        path = "Assets\\MapData\\" + edgeFile;
+        reader = File.OpenText(path);
+        while ((line = reader.ReadLine()) != null)
+        {
+            string[] items = line.Split(',');
+            Edge e = new Edge(int.Parse(items[0]) - displacement, int.Parse(items[1]) - displacement);
+            edges.Add(e);
+            Node n1 = getNode(e.n1);
+            n1.edges.Add(e);
+            Node n2 = getNode(e.n2);
+            n2.edges.Add(e);
+        }
+
+        minDists = new List<float>();
+        if (initializeDistance) {
+            path = "Assets\\AgentData\\" + minDistFile;
+            if (!File.Exists(path))
+                File.Delete(path);
+            dataReader = File.CreateText(path);
+            dataReader.Close();
+            foreach (Node n in spawn) {
+                Vector3 v1 = new Vector3(n.x, 1, n.y);
+                float remainingDistance = 10000000f;
+                foreach(Node e in tempExits) {
+                    Vector3 v2 = new Vector3(e.x, 0, e.y);
+                    UnityEngine.AI.NavMeshPath navPath = new UnityEngine.AI.NavMeshPath();
+                    UnityEngine.AI.NavMesh.CalculatePath(v1,v2,UnityEngine.AI.NavMesh.AllAreas,navPath);
+                    float tempDist = 0f;
+                    for(int i = 1; i < navPath.corners.Length; i++) {
+                        v2 = navPath.corners[i];
+                        tempDist += Vector3.Distance(v1, v2);
+                        v1 = v2;
+                    }
+                    if(tempDist < remainingDistance)
+                        remainingDistance = tempDist;
+                }
+                minDists.Add(remainingDistance);
+                storeData(true, n.id, remainingDistance);
+            }
+        }
+        else {
+            path = "Assets\\AgentData\\" + minDistFile;
+            reader = File.OpenText(path);
+            while ((line = reader.ReadLine()) != null) {
+                string[] items = line.Split(',');
+                minDists.Add(float.Parse(items[1]));
+            }
+
+        }
 
         //generate agents using AIcontroller which have limited knowledge of the graph
-        StartCoroutine("loadEdges", tempExits);
+        StartCoroutine(generateAgent());
     }
 
     private Node getNode(int id)
@@ -100,82 +152,17 @@ public class AgentManager : MonoBehaviour
             }
             f /= denom;
         }
-        File.AppendAllText(path, (start + "," + f + Environment.NewLine));
+        File.AppendAllText(path, (start + "," + f + "\n"));
     }
 
-    void Update() {
-        List<AIData> agents = new List<AIData>(FindObjectsOfType<AIData>());
-        foreach(AIData agent in agents) {
-            agent.check();
-        }
-    }
-
-    IEnumerator loadEdges(List<Node> tempExits) {
-        yield return new WaitForSeconds(1);
-        //determine edges
-        string path = "Assets\\MapData\\" + edgeFile;
-        StreamReader reader = File.OpenText(path);
-        string line;
-        while ((line = reader.ReadLine()) != null)
-        {
-            string[] items = line.Split(',');
-            Edge e = new Edge(int.Parse(items[0]) - displacement, int.Parse(items[1]) - displacement);
-            edges.Add(e);
-            //Debug.Log("Checking for node #" + e.n1);
-            Node n1 = getNode(e.n1);
-            n1.edges.Add(e);
-            //Debug.Log("Checking for node #" + e.n2);
-            Node n2 = getNode(e.n2);
-            n2.edges.Add(e);
-        }
-
-        minDists = new List<float>();
-        if (initializeDistance) {
-            path = "Assets\\AgentData\\" + minDistFile;
-            if (!File.Exists(path))
-                File.Delete(path);
-            StreamWriter dataReader = File.CreateText(path);
-            dataReader.Close();
-            foreach (Node n in spawn) {
-                Vector3 v1 = new Vector3(n.x, 1, n.y);
-                float remainingDistance = 10000000f;
-                foreach(Node e in tempExits) {
-                    Vector3 v2 = new Vector3(e.x, 0, e.y);
-                    UnityEngine.AI.NavMeshPath navPath = new UnityEngine.AI.NavMeshPath();
-                    UnityEngine.AI.NavMesh.CalculatePath(v1,v2,UnityEngine.AI.NavMesh.AllAreas,navPath);
-                    float tempDist = 0f;
-                    for(int i = 1; i < navPath.corners.Length; i++) {
-                        v2 = navPath.corners[i];
-                        tempDist += Vector3.Distance(v1, v2);
-                        v1 = v2;
-                    }
-                    if(tempDist < remainingDistance)
-                        remainingDistance = tempDist;
-                }
-                minDists.Add(remainingDistance);
-                storeData(true, n.id, remainingDistance);
-            }
-        }
-        else {
-            path = "Assets\\AgentData\\" + minDistFile;
-            reader = File.OpenText(path);
-            while ((line = reader.ReadLine()) != null) {
-                string[] items = line.Split(',');
-                minDists.Add(float.Parse(items[1]));
-            }
-
-        }
-        StartCoroutine("generateAgent");
-    }
-
-    IEnumerator generateAgent() {
+    IEnumerator generateAgent()
+    {
         for (int i = 0; i < numAgents; i++)
         {
             foreach (Node n in spawn)
             {
-                //Debug.Log("Generating agent " + i + " at node " + n.id);
                 GameObject temp = Instantiate(agent, new Vector3(n.x, 1, n.y), Quaternion.identity);
-                AIData ai = temp.GetComponent<AIData>();
+                AIcontroller ai = temp.GetComponent<AIcontroller>();
                 ai.setInternalVars(setSocial, this, setDelayTime, false);
                 List<Edge> e = getEdges();
                 ai.SetGraph(n, nodes, e, exits);

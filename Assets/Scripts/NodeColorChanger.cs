@@ -7,24 +7,23 @@ public class NodeColorChanger : MonoBehaviour {
     public Color lerpedColor2 = Color.green;
     
     // public GameObject sphereNode;
-    private List<AIData> foundAgents;
+    private List<AIcontroller> foundAgents;
     private Node loc = null;
     // private static int maxAgentsWhoKnow = 0;
 
     public void setNode(Node n)
     {
-        Debug.Log("" + n.id);
         loc = n;
     }
 
 	// Update is called once per frame
 	void Update () {
-        if (loc != null) {
-            Debug.Log("works?");
-            foundAgents = new List<AIData>(FindObjectsOfType<AIData>());
+        if (loc != null)
+        {
+            foundAgents = new List<AIcontroller>(FindObjectsOfType<AIcontroller>());
             int agentsWhoKnow = 0;
 
-            foreach (AIData agent in foundAgents)
+            foreach (AIcontroller agent in foundAgents)
             {
                 foreach (Edge edge in agent.getEdges())
                 {
@@ -50,7 +49,7 @@ public class NodeColorChanger : MonoBehaviour {
             {
                 // float percentGradient = (float)agentsWhoKnow / foundAgents.Count;
                 float percentGradient = (float)agentsWhoKnow / 160.0f;
-                //Debug.Log("Percent gradient for node " + loc.id + ": " + percentGradient);
+                Debug.Log("Percent gradient for node " + loc.id + ": " + percentGradient);
                 MeshRenderer nodeRenderer = (MeshRenderer)gameObject.GetComponent("MeshRenderer");
 
                 if(percentGradient < 0.5f)

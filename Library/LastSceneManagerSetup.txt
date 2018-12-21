@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/SimplerDemo5-Copy.unity
+- path: Assets/Scenes/demoMap.unity
   isLoaded: 1
   isActive: 1
