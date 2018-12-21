@@ -75,6 +75,7 @@ public class AIData : MonoBehaviour
                 //search if necessary
                 if (dest.Count == 1)
                     dest = repeatedA((int)dest[0]);
+                if (dest != null) {
                 dest.RemoveAt(0);
                 //get edge data for primacy/recency, pt. 2
                 int b = (int)dest[0];
@@ -84,6 +85,7 @@ public class AIData : MonoBehaviour
                     Vector3 v = getNode((int)dest[0]).getLoc();
                     agent.SetDestination(v);
                 }
+            }
             }
         }
     }
@@ -143,7 +145,7 @@ public class AIData : MonoBehaviour
     }
 
     private bool hasReachedDest() {
-        if (dest.Count == 0) {
+        if (dest == null || dest.Count == 0) {
             return false;
         }
         Vector3 destV = getNode((int)(dest[0])).getLoc();
@@ -302,12 +304,14 @@ public class AIData : MonoBehaviour
             }
         }
         //return lowest path cost
+        if(l == null)
+            return l;
         return l.GetRange(1, l.Count - 1);
     }
 
     private void OnTriggerEnter(Collider collision) {
         AIData other = collision.gameObject.GetComponent<AIData>();
-        if (!(other == null) && canCommunicate) {
+        if (!(other == null) && canCommunicate && dest != null) {
             System.Random rnd = new System.Random();
             //Agent communicating
             if (rnd.Next(0, 100) < social) {

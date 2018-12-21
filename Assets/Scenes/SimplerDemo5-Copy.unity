@@ -32072,13 +32072,13 @@ MonoBehaviour:
   nm: {fileID: 1858575623}
   setSocial: 50
   setInitialKnowledge: 50
-  setDelayTime: 100
+  setDelayTime: 2
   initializeDistance: 1
   minDistFile: minDist.txt
   dataFile: empDist.txt
   displacement: 0
-  nodeFile: nodes.txt
-  edgeFile: edge.txt
+  nodeFile: demoMapNodes.txt
+  edgeFile: demoMapEdge.txt
   numAgents: 3
   agent: {fileID: 1676364918050846, guid: e00a9a92c87a1eb458edae50ddd64d55, type: 2}
   nodeObject: {fileID: 1789786596842300, guid: ede2429f30b5ea248807e4532125d62d, type: 2}

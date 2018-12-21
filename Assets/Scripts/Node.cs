@@ -12,7 +12,6 @@ public class Node : MonoBehaviour
         x = transform.position.x;
         y = transform.position.z;
         id = curID;
-        Debug.Log("Node generated: " + id);
         curID += 1;
         edges = new List<Edge>();
     }
